@@ -1,0 +1,5 @@
+Client 通过 Socket通信 和 Listener端 连接，采用多线程的方式，每连接一个Client创建一个线程
+
+Listener 和 SocketServer端采用JMS机制，创建session 通过TCP进行通信，每接收到一个消息会自动作出回应。
+
+启动顺序可以是 先启动Listener端 再启动SocketServer端 最后启动Client端。
