@@ -3,14 +3,14 @@ package Meetingrmi;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-public class Server { 
+public class Server {
 
 	private static int PORT = 8099;
 
 	public static void main(String[] args) {
-		
+
 		String registryURL = "rmi://localhost:"+PORT+"/RMIServer";
-		try {		
+		try {
 			ServiceImpl service = new ServiceImpl();
 			LocateRegistry.createRegistry(PORT);
 			Naming.bind(registryURL, service);

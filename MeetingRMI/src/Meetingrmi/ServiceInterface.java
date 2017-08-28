@@ -10,7 +10,7 @@ public interface ServiceInterface extends Remote {
 			throws RemoteException, SQLException;
 
 	public boolean add(String userName, String password, String schedule_user,
-			String title, String label, String startTime, String endTime)
+					   String title, String label, String startTime, String endTime)
 			throws RemoteException;
 
 	public String[] query(String userName, String start, String end)

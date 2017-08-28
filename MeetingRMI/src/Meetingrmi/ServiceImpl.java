@@ -13,28 +13,28 @@ import java.util.Date;
 public class ServiceImpl extends UnicastRemoteObject implements ServiceInterface {
 
 	public java.sql.Connection conn = null;
-    public java.sql.ResultSet rs = null;
-    java.sql.Statement st=null;
-    java.sql.Statement st1=null;
-    java.sql.Statement st2=null;
-    java.sql.Statement st3=null;
-    java.sql.Statement st4=null;
-    java.sql.Statement st5=null;
-    java.sql.Statement st6=null;
-    java.sql.Statement st7=null;
-    java.sql.Statement st8=null;
-    java.sql.Statement st9=null;
-    ResultSet a,b,c,d,e,f,g,h,i,j;
+	public java.sql.ResultSet rs = null;
+	java.sql.Statement st=null;
+	java.sql.Statement st1=null;
+	java.sql.Statement st2=null;
+	java.sql.Statement st3=null;
+	java.sql.Statement st4=null;
+	java.sql.Statement st5=null;
+	java.sql.Statement st6=null;
+	java.sql.Statement st7=null;
+	java.sql.Statement st8=null;
+	java.sql.Statement st9=null;
+	ResultSet a,b,c,d,e,f,g,h,i,j;
 	public ServiceImpl() throws RemoteException {
 		try {
-			//×¢²áÇý¶¯
+			//×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			//com.microsoft.sqlserver.jdbc.SQLServerDriver
 			//Class.forName("org.objectweb.rmijdbc.Driver").newInstance();
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
-			//´´½¨Êý¾Ý¿âÁ¬½Ó
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½
 			String url = "jdbc:sqlserver://localhost:1433;"+"DatabaseName=MeetingManager;UserName = sa;PassWord = 123";
-			//´´½¨Ö´ÐÐ¶ÔÏó
-			conn = DriverManager.getConnection(url);		
+			//ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð¶ï¿½ï¿½ï¿½
+			conn = DriverManager.getConnection(url);
 			st = conn.createStatement();
 			st1 = conn.createStatement();
 			st2 = conn.createStatement();
@@ -45,7 +45,7 @@ public class ServiceImpl extends UnicastRemoteObject implements ServiceInterface
 			st7 = conn.createStatement();
 			st8 = conn.createStatement();
 			st9 = conn.createStatement();
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,8 +104,8 @@ public class ServiceImpl extends UnicastRemoteObject implements ServiceInterface
 	// add a meeting
 	@Override
 	public boolean add(String userName, String password, String schedule_user,
-			String title, String label, String startTime, String endTime) throws RemoteException {
-        
+					   String title, String label, String startTime, String endTime) throws RemoteException {
+
 		boolean flag = false;
 		boolean flag1=true;
 		boolean flag2=true;
@@ -114,95 +114,95 @@ public class ServiceImpl extends UnicastRemoteObject implements ServiceInterface
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		Date startDate = null;
 		Date endDate = null;
-			try {
-				startDate = sdf.parse(startTime);
-				endDate = sdf.parse(endTime);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			startDate = sdf.parse(startTime);
+			endDate = sdf.parse(endTime);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-			try {
-				a=st.executeQuery("select * from userinfo where userName='"+userName+"'");
-				j=st9.executeQuery("select * from userinfo where userName='"+schedule_user+"'");
-				if (a.next()&&j.next()) {
-					flag = true;
+		try {
+			a=st.executeQuery("select * from userinfo where userName='"+userName+"'");
+			j=st9.executeQuery("select * from userinfo where userName='"+schedule_user+"'");
+			if (a.next()&&j.next()) {
+				flag = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// judge if user& schedule user have other meeting
+		try {
+			b=st1.executeQuery("select * from meeting where userName='"+userName+"'");
+			c=st2.executeQuery("select * from meeting where schedule_user='"+schedule_user+"'");
+			while(b.next()){
+				String StartString=b.getString(6);
+
+				String EndString=b.getString(7);
+
+				Date StartDate = sdf.parse(StartString);
+				Date EndDate = sdf.parse(EndString);
+
+				if((startDate.getTime()<=StartDate.getTime()&&endDate.getTime()>=StartDate.getTime())||
+						(startDate.getTime()<=EndDate.getTime()&&endDate.getTime()>=EndDate.getTime())){
+					System.out.println("Ô¤Ô¼ï¿½Ëµï¿½Ê±ï¿½ï¿½ï¿½Ð³ï¿½Í»ï¿½ï¿½");//ï¿½ï¿½userï¿½ï¿½Ê±ï¿½ï¿½ï¿½Í»
+					flag1=false;
+					break;
 				}
+			}
+			while(c.next()){
+				String schedule_StartString=c.getString(6);
+				String schedule_EndString=c.getString(7);
+				Date schedule_StartDate = sdf.parse(schedule_StartString);
+				Date schedule_EndDate = sdf.parse(schedule_EndString);
+				if((startDate.getTime()<=schedule_StartDate.getTime()&&endDate.getTime()>=schedule_StartDate.getTime())||
+						(startDate.getTime()<=schedule_EndDate.getTime()&&endDate.getTime()>=schedule_EndDate.getTime()))
+				{
+					System.out.println("ï¿½Î»ï¿½ï¿½ßµï¿½Ê±ï¿½ï¿½ï¿½Ð³ï¿½Í»ï¿½ï¿½");//ï¿½ï¿½anotherUserï¿½ï¿½Ê±ï¿½ï¿½ï¿½Í»
+					flag2=false;
+					break;
+				}
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(flag&&flag1&&flag2){
+			try {
+				i=st8.executeQuery("select * from meeting");
+				while(i.next())
+				{
+					rowCount++;
+				}
+				meetingID=rowCount+1;
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// judge if user& schedule user have other meeting
-				try {
-					b=st1.executeQuery("select * from meeting where userName='"+userName+"'");
-					c=st2.executeQuery("select * from meeting where schedule_user='"+schedule_user+"'");
-					while(b.next()){
-						String StartString=b.getString(6);
 
-						String EndString=b.getString(7);
-
-						Date StartDate = sdf.parse(StartString);
-						Date EndDate = sdf.parse(EndString);
-								
-						if((startDate.getTime()<=StartDate.getTime()&&endDate.getTime()>=StartDate.getTime())||
-							(startDate.getTime()<=EndDate.getTime()&&endDate.getTime()>=EndDate.getTime())){
-							System.out.println("Ô¤Ô¼ÈËµÄÊ±¼äÓÐ³åÍ»£¡");//ÓëuserµÄÊ±¼ä³åÍ»
-							flag1=false;
-							break;
-						}		
-					}
-					while(c.next()){
-						String schedule_StartString=c.getString(6);
-						String schedule_EndString=c.getString(7);
-						Date schedule_StartDate = sdf.parse(schedule_StartString);
-						Date schedule_EndDate = sdf.parse(schedule_EndString);
-						if((startDate.getTime()<=schedule_StartDate.getTime()&&endDate.getTime()>=schedule_StartDate.getTime())||
-								(startDate.getTime()<=schedule_EndDate.getTime()&&endDate.getTime()>=schedule_EndDate.getTime()))
-						{
-							System.out.println("²Î»áÕßµÄÊ±¼äÓÐ³åÍ»£¡");//ÓëanotherUserµÄÊ±¼ä³åÍ»
-							flag2=false;
-							break;
-						}
-
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			if(flag&&flag1&&flag2){
-				try {
-					i=st8.executeQuery("select * from meeting");
-					while(i.next()) 
-					{
-						rowCount++;
-					}
-					meetingID=rowCount+1;
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				String sql = "insert into meeting(meetingID,userName,schedule_user,title,label,startTime,endTime) values("
+			String sql = "insert into meeting(meetingID,userName,schedule_user,title,label,startTime,endTime) values("
 					+meetingID+",'"+userName+"','"+schedule_user+"','"+title+"','"+label+"','"+startTime+"','"+endTime+"')";
-				add(sql);
-				
-				System.out.println("Ôö¼Ó»áÒé³É¹¦£¡»áÒéID£º" + meetingID);
-					
-				return true;
-			}
+			add(sql);
+
+			System.out.println("ï¿½ï¿½ï¿½Ó»ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½" + meetingID);
+
+			return true;
+		}
 		else{
-			System.out.println("¿Í»§ÉÐÎ´Ô¤Ô¼»ò´æÔÚÊ±¼ä³åÍ»£¡");
+			System.out.println("ï¿½Í»ï¿½ï¿½ï¿½Î´Ô¤Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Í»ï¿½ï¿½");
 			return false;
-			}
+		}
 	}
 
 	// clean all
 	@Override
 	public boolean clear(String userName) throws RemoteException {
-		
+
 		boolean flag = false;
 		try {
 			d=st3.executeQuery("select * from userinfo where userName='"+userName+"'");
@@ -213,25 +213,25 @@ public class ServiceImpl extends UnicastRemoteObject implements ServiceInterface
 
 		try {
 			if (d.next()) {
-				System.out.println("²Ù×÷ÈËÒÑ×¢²á£¡");
+				System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½á£¡");
 				flag = true;
 			}
 		} catch (SQLException e) {e.printStackTrace();}
 		if (flag) {
 			String sql="delete from meeting where userName='"+userName+"'";
 			clearAll(sql);
-			System.out.println(userName+"´´½¨µÄ»áÒéÒÑ±»Çå³ý£¡");
+			System.out.println(userName+"ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½Ñ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			return true;
 		}
 		else {
-			System.out.println("²Ù×÷ÈËÎ´×¢²á£¡");
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´×¢ï¿½á£¡");
 			return false;
 		}
 	}
 
 	//delete a meeting
 	public boolean delete(String userName, int meetingID) throws RemoteException, SQLException {
-		
+
 		boolean flag = false;
 		try {
 			e=st4.executeQuery("select * from userinfo where userName='"+userName+"'");
@@ -242,26 +242,26 @@ public class ServiceImpl extends UnicastRemoteObject implements ServiceInterface
 
 		try {
 			if (e.next()) {
-				System.out.println("²Ù×÷ÈËÒÑ×¢²á£¡");
+				System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½á£¡");
 				flag = true;
 			}
 		} catch (SQLException e) {e.printStackTrace();}
 
-			if (flag) {
-				String sql="delete from meeting where userName='"+userName+"' and meetingID='"+meetingID+"'";
-				delete(sql);
-				System.out.println(userName+"´´½¨µÄIDÎª"+meetingID+"µÄ»áÒéÒÑ±»Çå³ý£¡");
-				return true;
-			}
-			else {
-				System.out.println("²Ù×÷ÈËÎ´×¢²á»òÃÜÂë´íÎó£¡");
-				return false;}
+		if (flag) {
+			String sql="delete from meeting where userName='"+userName+"' and meetingID='"+meetingID+"'";
+			delete(sql);
+			System.out.println(userName+"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IDÎª"+meetingID+"ï¿½Ä»ï¿½ï¿½ï¿½ï¿½Ñ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+			return true;
+		}
+		else {
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+			return false;}
 	}
 
 	//query meeting
 	@Override
 	public String[] query(String userName, String start, String end) throws RemoteException,SQLException {
-		
+
 		boolean flag = false;
 		SimpleDateFormat sdf=new SimpleDateFormat("yy-MM-dd");
 		try {
@@ -270,68 +270,68 @@ public class ServiceImpl extends UnicastRemoteObject implements ServiceInterface
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		String[] s = new String[100];
 
-			if (f.next()) {
-				System.out.println("²Ù×÷ÈËÒÑ×¢²á£¡");
-				flag = true;
-			}
+		if (f.next()) {
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½á£¡");
+			flag = true;
+		}
 
-			if (flag) {
-				Date startDate = null;
-				Date endDate = null;
-				try {
-					startDate = sdf.parse(start.trim());
-					endDate = sdf.parse(end.trim());
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				String sql="select * from meeting where userName='"+userName+"'or schedule_user = '"+userName+"'and startTime>='"+startDate.toLocaleString()+"'  and endTime<='"+endDate.toLocaleString()+"'";
-				try {
-					g=st6.executeQuery(sql);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				int i=0;
-				while (g.next()) {
-					s[i]="ID:"+g.getInt(1)+" ²Î»áÈË:<"+g.getString(2)+"&"+g.getString(3)+"> "+"Title:"+g.getString(4)+" Label:"+g.getString(5);
-					i++;
-				}
-				return s;		
+		if (flag) {
+			Date startDate = null;
+			Date endDate = null;
+			try {
+				startDate = sdf.parse(start.trim());
+				endDate = sdf.parse(end.trim());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			else{
-				System.out.println("²Ù×÷ÈËÎ´×¢²á£¡");
-				String[] err= new String[1];
-				err[0]="²éÑ¯Ê§°Ü£¬Çë¼ì²éÊÇ·ñÒÑ×¢²á£¡";
-				return err;
+			String sql="select * from meeting where userName='"+userName+"'or schedule_user = '"+userName+"'and startTime>='"+startDate.toLocaleString()+"'  and endTime<='"+endDate.toLocaleString()+"'";
+			try {
+				g=st6.executeQuery(sql);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+			int i=0;
+			while (g.next()) {
+				s[i]="ID:"+g.getInt(1)+" ï¿½Î»ï¿½ï¿½ï¿½:<"+g.getString(2)+"&"+g.getString(3)+"> "+"Title:"+g.getString(4)+" Label:"+g.getString(5);
+				i++;
+			}
+			return s;
+		}
+		else{
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´×¢ï¿½á£¡");
+			String[] err= new String[1];
+			err[0]="ï¿½ï¿½Ñ¯Ê§ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½×¢ï¿½á£¡";
+			return err;
+		}
 	}
 
 	//register 
 	@Override
 	public boolean register(String userName, String password) throws RemoteException, SQLException {
-				
-			try {
-				h=st7.executeQuery("select * from userinfo where userName='"+userName+"'");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
-			if (h.next()) {
-				System.out.println("¿Í»§¶Ë×¢²áÊ§°Ü£¡ÆäËùÊ¹ÓÃµÄÓÃ»§ÃûÒÑ¾­´æÔÚ£¡");
-				return false;
-			}
+		try {
+			h=st7.executeQuery("select * from userinfo where userName='"+userName+"'");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-			else{
+		if (h.next()) {
+			System.out.println("ï¿½Í»ï¿½ï¿½ï¿½×¢ï¿½ï¿½Ê§ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ãµï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ú£ï¿½");
+			return false;
+		}
+
+		else{
 			String sql="insert into userinfo(userName,password) values ('"+userName+"','"+password+"')";
 			register(sql);
-			System.out.println("¿Í»§¶Ë×¢²á³É¹¦£¡");
+			System.out.println("ï¿½Í»ï¿½ï¿½ï¿½×¢ï¿½ï¿½É¹ï¿½ï¿½ï¿½");
 			return true;
-			}
+		}
 	}
 
 }

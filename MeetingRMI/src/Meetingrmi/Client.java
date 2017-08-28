@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 import java.rmi.*;
 import java.sql.SQLException;
 
-public class Client 
+public class Client
 {
 	static String userName;
 	static String password;
@@ -14,18 +14,18 @@ public class Client
 	static String startTime; static String endTime;
 	static int meetingID;
 	private static int PORT = 8099;
-	
+
 	public static void main(String[] args)
 	{
-		
-		System.out.println("ÇëÔÚ¡°Client¡±ºóÃæÌí¼ÓÃüÁî£¡");
-		System.out.println("ÃüÁîÁÐ±í£º");
-		System.out.println("-r register  ×¢²áÓÃ»§");
-		System.out.println("-a add  Ìí¼Ó»áÒé");
-		System.out.println("-q query  ²éÑ¯Ïà¹Ø»áÒé");
-		System.out.println("-d delete  É¾³ýÏà¹Ø»áÒé");
-		System.out.println("-c clear  Çå³ýÄ³Ô¤Ô¼ÈËµÄËùÓÐ»áÒé");
-		System.out.println("end  ½áÊø³ÌÐò");
+
+		System.out.println("ï¿½ï¿½ï¿½Ú¡ï¿½Clientï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¡");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½");
+		System.out.println("-r register  ×¢ï¿½ï¿½ï¿½Ã»ï¿½");
+		System.out.println("-a add  ï¿½ï¿½Ó»ï¿½ï¿½ï¿½");
+		System.out.println("-q query  ï¿½ï¿½Ñ¯ï¿½ï¿½Ø»ï¿½ï¿½ï¿½");
+		System.out.println("-d delete  É¾ï¿½ï¿½ï¿½ï¿½Ø»ï¿½ï¿½ï¿½");
+		System.out.println("-c clear  ï¿½ï¿½ï¿½Ä³Ô¤Ô¼ï¿½Ëµï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½");
+		System.out.println("end  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		args = new String[100];
 		args[0]="start";
 
@@ -35,88 +35,88 @@ public class Client
 		try {
 			service = (ServiceInterface)Naming.lookup(registryURL);
 			Scanner scan = new Scanner(System.in);
-		while(!args[0].equals("end")){
-			System.out.println("ÇëÊäÈëÃüÁî£º£¨ÀýÈç£º -a£©");
-			args[0]=scan.nextLine();
-			
-			if(args[0].equals("-r"))
-			{
-				System.out.print("ÇëÊäÈëÓÃ»§Ãû: ");
-				  userName = scan.nextLine();
-				  System.out.print("ÇëÊäÈëÃÜÂë: ");
-				  password = scan.nextLine();
-				  if (service.register(userName, password)) {
-					  System.out.println("×¢²á³É¹¦£¡");
-				}else{
-					System.out.println("×¢²áÊ§°Ü£¡ÄúËùÊ¹ÓÃµÄÓÃ»§ÃûÒÑ¾­´æÔÚ£¡");
+			while(!args[0].equals("end")){
+				System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£ºï¿½ï¿½ï¿½ï¿½ï¿½ç£º -aï¿½ï¿½");
+				args[0]=scan.nextLine();
+
+				if(args[0].equals("-r"))
+				{
+					System.out.print("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½: ");
+					userName = scan.nextLine();
+					System.out.print("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ");
+					password = scan.nextLine();
+					if (service.register(userName, password)) {
+						System.out.println("×¢ï¿½ï¿½É¹ï¿½ï¿½ï¿½");
+					}else{
+						System.out.println("×¢ï¿½ï¿½Ê§ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ãµï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ú£ï¿½");
 					}
-			}
-			
-			else if(args[0].equals("-a"))
-			{
-				
-				System.out.println("ÇëÒÀ´ÎÊäÈëÔ¤Ô¼ÈË¡¢ÃÜÂë¡¢ÆäËû²Î»áÈË¡¢»áÒéÖ÷Ìâ¡¢±êÇ©¡¢ÆðÊ¼Ê±¼äºÍÖÕÖ¹Ê±¼ä£¬ÓÃ»Ø³µ·û·Ö¸ô£º");
-				userName = scan.nextLine(); password = scan.nextLine();
-				schedule_user = scan.nextLine(); title = scan.nextLine();
-				label = scan.nextLine(); startTime = scan.nextLine();
-				endTime = scan.nextLine();
-				if (service.add(userName, password, schedule_user, title, label, startTime,endTime)) {
-					System.out.println("Ô¤Ô¼³É¹¦£¡");
 				}
-				else {
-					System.out.println("Ô¤Ô¼Ê§°Ü£¡Çë¼ì²é£º");
-					System.out.println("1¡¢ÄúÊÇ·ñÒÑ×¢²á");
-					System.out.println("2¡¢Äú»òÕßÆäËû²Î»áÈËÒÑÓÐ»áÒé°²ÅÅ");
-					System.out.println("3¡¢»áÒéÊ±¼äÊÇ·ñ´æÔÚ³åÍ»");
+
+				else if(args[0].equals("-a"))
+				{
+
+					System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼ï¿½Ë¡ï¿½ï¿½ï¿½ï¿½ë¡¢ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½Ë¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¡¢ï¿½ï¿½Ç©ï¿½ï¿½ï¿½ï¿½Ê¼Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ö¹Ê±ï¿½ä£¬ï¿½Ã»Ø³ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½");
+					userName = scan.nextLine(); password = scan.nextLine();
+					schedule_user = scan.nextLine(); title = scan.nextLine();
+					label = scan.nextLine(); startTime = scan.nextLine();
+					endTime = scan.nextLine();
+					if (service.add(userName, password, schedule_user, title, label, startTime,endTime)) {
+						System.out.println("Ô¤Ô¼ï¿½É¹ï¿½ï¿½ï¿½");
+					}
+					else {
+						System.out.println("Ô¤Ô¼Ê§ï¿½Ü£ï¿½ï¿½ï¿½ï¿½é£º");
+						System.out.println("1ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½×¢ï¿½ï¿½");
+						System.out.println("2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½é°²ï¿½ï¿½");
+						System.out.println("3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ú³ï¿½Í»");
+					}
 				}
-			}
-				
-			else if(args[0].equals("-q"))
-			{
-				System.out.println("ÇëÒÀ´ÎÊäÈë²éÑ¯ÈË¡¢ÆðÊ¼Ê±¼äºÍÖÕÖ¹Ê±¼ä£¬ÓÃ»Ø³µ·û·Ö¸ô£º");
-				userName = scan.nextLine();
-				startTime = scan.nextLine();
-				endTime = scan.nextLine();
-				String[] queryresult= new String[100];
-				queryresult = service.query(userName,startTime,endTime);
-				
-				if(queryresult.length>=1&&queryresult[0] != null){
-					for(int i=0;i<queryresult.length;i++){
-						if(queryresult[i] != null){
-							System.out.println(queryresult[i]);
+
+				else if(args[0].equals("-q"))
+				{
+					System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¯ï¿½Ë¡ï¿½ï¿½ï¿½Ê¼Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ö¹Ê±ï¿½ä£¬ï¿½Ã»Ø³ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½");
+					userName = scan.nextLine();
+					startTime = scan.nextLine();
+					endTime = scan.nextLine();
+					String[] queryresult= new String[100];
+					queryresult = service.query(userName,startTime,endTime);
+
+					if(queryresult.length>=1&&queryresult[0] != null){
+						for(int i=0;i<queryresult.length;i++){
+							if(queryresult[i] != null){
+								System.out.println(queryresult[i]);
+							}
 						}
 					}
+					else
+					{System.out.println("Î´ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½Ø»ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½");}
 				}
-				else
-					{System.out.println("Î´²éÑ¯µ½Ïà¹Ø»áÒéÐÅÏ¢£¡");}
-			}
-			
-			else if(args[0].equals("-d"))
-			{
-			
-				System.out.println("ÇëÒÀ´ÎÊäÈëÔ¤Ô¼ÈËºÍ»áÒéID£¬ÓÃ»Ø³µ·û·Ö¸ô£º");
-				userName = scan.nextLine();
-				meetingID = scan.nextInt();
-				if(service.delete(userName,meetingID))
-					System.out.println("É¾³ý³É¹¦£¡");
-				else
-					System.out.println("Çë¼ì²éÔ¤Ô¼ÈË»ò»áÒéIDÊÇ·ñÊäÈëÓÐÎó£¡");
-			}
-			else if(args[0].equals("-c"))
-			{
 
-				System.out.println("ÇëÊäÈëÔ¤Ô¼ÈË£º");
-				userName = scan.nextLine();
-				if(service.clear(userName)){
-				System.out.println("Çå³ýÍê³É£¡");}
-				else {
-					System.out.println("²Ù×÷Ê§°Ü£¡");
+				else if(args[0].equals("-d"))
+				{
+
+					System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼ï¿½ËºÍ»ï¿½ï¿½ï¿½IDï¿½ï¿½ï¿½Ã»Ø³ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½");
+					userName = scan.nextLine();
+					meetingID = scan.nextInt();
+					if(service.delete(userName,meetingID))
+						System.out.println("É¾ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½");
+					else
+						System.out.println("ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼ï¿½Ë»ï¿½ï¿½ï¿½ï¿½IDï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 				}
-					
+				else if(args[0].equals("-c"))
+				{
+
+					System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤Ô¼ï¿½Ë£ï¿½");
+					userName = scan.nextLine();
+					if(service.clear(userName)){
+						System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½");}
+					else {
+						System.out.println("ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½");
+					}
+
+				}
+				else
+				{System.out.println("ï¿½Ç·ï¿½ï¿½ï¿½ï¿½î£¡");}
 			}
-			else
-			{System.out.println("·Ç·¨ÃüÁî£¡");}
-		}
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
